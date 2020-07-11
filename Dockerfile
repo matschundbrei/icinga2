@@ -36,3 +36,5 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 
 #Open Port 80
 EXPOSE 80
+
+#Test
