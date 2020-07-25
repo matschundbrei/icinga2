@@ -34,7 +34,24 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     libmonitoring-plugin-perl \
     && apt-get clean
 
+#Delete the defautl Ubuntu Apache welcome page
+RUN rm /var/www/html/index.html
+
+# Add icingaweb2 to apache2 group
+RUN usermod -a -G icingaweb2 www-data
+#Activate icinga2 API
+RUN icinga2 api setup
+#Enablling the IDO MySQL module
+RUN icinga2 feature enable ido-mysql
+
+#Start icinga2 and apache
+RUN service apache2 restart
+
+# Define mountable directories.
+VOLUME /etc/icinga2/
+
+# Define working directory.
+WORKDIR /etc/icinga2/
+
 #Open Port 80
 EXPOSE 80
-
-#Test
