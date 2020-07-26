@@ -8,7 +8,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     && apt update \
     && apt upgrade -y \
     && apt install -y --no-install-recommends \
-    apache2 wget apt-transport-https ca-certificates gnupg curl
+    apache2 wget apt-transport-https ca-certificates gnupg curl apt-utils
 
 #Installing Icinga
 RUN export DEBIAN_FRONTEND=noninteractive \
@@ -16,7 +16,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     && echo "deb https://packages.icinga.com/ubuntu icinga-bionic main" > /etc/apt/sources.list.d/icinga.list \
     && apt update \
     && apt install -y --install-recommends \
-    icinga2 icinga2-ido-mysql icingacli \
+    icinga2 icingacli \
     icingaweb2 \
     icingaweb2-module-doc \
     icingaweb2-module-monitoring \
@@ -26,17 +26,13 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     nagios-snmp-plugins \
     libmonitoring-plugin-perl \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* 
+    && rm -rf /var/lib/apt/lists/* \
+    icinga2 api setup \
+    icinga2 feature enable ido-mysql
 
-#Delete the defautl Ubuntu Apache welcome page
-RUN rm /var/www/html/index.html
-
-# Add icingaweb2 to apache2 group
-RUN usermod -a -G icingaweb2 www-data
-#Activate icinga2 API
-RUN icinga2 api setup
-#Enablling the IDO MySQL module
-RUN icinga2 feature enable ido-mysql
+#Copy Vhost to apache config
+#COPY config/000-default.conf /etc/apache2/sites-available
+#COPY config/default-ssl.conf /etc/apache2/sites-available
 
 # Define mountable directories.
 VOLUME /etc/icinga2/
@@ -48,7 +44,7 @@ WORKDIR /etc/icinga2
 EXPOSE 80
 
 #Open Port 443
-EXPOSE 443
+#EXPOSE 443
 # Needed ENV variables to run apache
 # see /etc/apache2/envvars
 ENV APACHE_RUN_USER www-data
