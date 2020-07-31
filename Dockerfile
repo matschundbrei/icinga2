@@ -18,4 +18,4 @@ ENV APACHE_RUN_USER=apache \
 
 EXPOSE 80
 
-CMD ["/usr/sbin/httpd", "-f", "/etc/apache2/httpd.conf", "-k", "start"]
+CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
