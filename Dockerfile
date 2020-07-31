@@ -7,7 +7,7 @@ RUN apk update; \
     apk upgrade; \
     apk add --no-cache apache2
 
-COPY config/httpd.conf /etc/apache2
+#COPY config/httpd.conf /etc/apache2
 
 ENV APACHE_RUN_USER=apache \
     APACHE_RUN_GROUP=apache \
